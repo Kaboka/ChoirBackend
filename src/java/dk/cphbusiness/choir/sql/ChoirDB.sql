@@ -28,8 +28,8 @@ create table CHOIR_ROLE(
 
 create table VOICE(
     CODE int primary key,
-    NAME varchar(40),
-    GROUP_NAME varchar(40)
+    GROUP_NAME varchar(40),
+    NAME varchar(40)
 );
 
 
@@ -91,7 +91,34 @@ create table HAS_VOICE(
     CODE int references VOICE(CODE),
     ID int references MATERIAL(ID),
     primary key(CODE,ID)
-)
+);
 
+insert into VOICE
+values
+(0,'None','Other'),
+(1,'First Soprano','Soprano'),
+(2,'Second Soprano','Soprano'),
+(4,'First Alto','Alto'),
+(8,'Second Alto','Alto'),
+(16,'First Tenor','Tenor'),
+(32,'Second Tenor','Tenor'),
+(64,'First Bass','Bass'),
+(128,'Second Bass','Bass'),
+(256,'Conductor','Other');
 
+insert into CHOIR_ROLE
+values
+('ADM','Administrator'),
+('BRD','Board'),
+('REP','Repertoire');
+
+insert into PERSON
+Values(1,'Lars','Clausen',null);
+
+insert into MEMBER
+values(1,'Ålegade 7','2300','København','53246291','Lars_Clausen@hotmail.com','12345',1);
+
+insert into HAS_ROLE
+values
+(1,'ADM');
 

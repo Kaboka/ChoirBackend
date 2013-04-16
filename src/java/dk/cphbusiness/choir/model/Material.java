@@ -5,11 +5,14 @@
 package dk.cphbusiness.choir.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -51,6 +54,11 @@ public class Material implements Serializable {
     @Size(max = 10)
     @Column(name = "TYPE")
     private String type;
+    @JoinTable(name = "HAS_VOICE", joinColumns = {
+    @JoinColumn(name = "ID", referencedColumnName = "ID")}, inverseJoinColumns = {
+    @JoinColumn(name = "CODE", referencedColumnName = "CODE")})
+    @ManyToMany
+    private Collection<Voice> voices;
     @JoinColumn(name = "MUSIC_ID", referencedColumnName = "ID") 
     @ManyToOne(optional = false)
     private Music musicId;
@@ -101,7 +109,13 @@ public class Material implements Serializable {
     public void setType(String type) {
         this.type = type;
     }
+    public Collection<Voice> getVoices() {
+        return voices;
+    }
 
+    public void setVoiceCollection(Collection<Voice> voices) {
+        this.voices = voices;
+    }
     public Music getMusicId() {
         return musicId;
     }

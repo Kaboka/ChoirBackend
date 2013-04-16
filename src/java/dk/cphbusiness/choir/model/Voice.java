@@ -43,10 +43,10 @@ public class Voice implements Serializable {
     @Size(max = 40)
     @Column(name = "GROUP_NAME")
     private String groupName;
-    @ManyToMany(mappedBy = "voiceCollection")
-    private Collection<Material> materialCollection;
-    @OneToMany(mappedBy = "code")
-    private Collection<ChoirMember> member1Collection;
+    @ManyToMany(mappedBy = "voices")
+    private Collection<Material> materials;
+    @OneToMany(mappedBy = "voice")
+    private Collection<ChoirMember> members;
 
     public Voice() {
     }
@@ -79,20 +79,20 @@ public class Voice implements Serializable {
         this.groupName = groupName;
     }
 
-    public Collection<Material> getMaterialCollection() {
-        return materialCollection;
+    public Collection<Material> getMaterials() {
+        return materials;
     }
 
-    public void setMaterialCollection(Collection<Material> materialCollection) {
-        this.materialCollection = materialCollection;
+    public void setMaterials(Collection<Material> materials) {
+        this.materials = materials;
     }
 
-    public Collection<ChoirMember> getMember1Collection() {
-        return member1Collection;
+    public Collection<ChoirMember> getMembers() {
+        return members;
     }
 
-    public void setMember1Collection(Collection<ChoirMember> member1Collection) {
-        this.member1Collection = member1Collection;
+    public void setMembers(Collection<ChoirMember> members) {
+        this.members = members;
     }
 
     @Override

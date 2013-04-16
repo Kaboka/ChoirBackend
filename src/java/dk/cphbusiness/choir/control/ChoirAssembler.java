@@ -5,6 +5,7 @@
 package dk.cphbusiness.choir.control;
 
 import dk.cphbusiness.choir.contract.dto.MemberDetail;
+import dk.cphbusiness.choir.contract.dto.MemberSummary;
 import dk.cphbusiness.choir.contract.dto.RoleSummary;
 import dk.cphbusiness.choir.contract.dto.VoiceSummary;
 import dk.cphbusiness.choir.model.ChoirMember;
@@ -18,7 +19,7 @@ import java.util.Collection;
  */
 public class ChoirAssembler {
     
-    public MemberDetail createMemberDetail(ChoirMember member){
+    public static MemberDetail createMemberDetail(ChoirMember member){
         Collection<RoleSummary> roles = new ArrayList<RoleSummary>();
         for(ChoirRole role : member.getChoirRoles()){
             roles.add(new RoleSummary(role.getCode(), role.getName()));
@@ -41,5 +42,18 @@ public class ChoirAssembler {
                 );
     }
     
+    public static MemberSummary createMemberSummary(ChoirMember member){
+        return new MemberSummary(
+                (long)member.getId(),
+                member.getVoice().getName(),
+                member.getFirstName() + " " + member.getLastName(),
+                "",
+                member.getStreet() + ", " + member.getZipcode(),
+                member.getEmail(),
+                member.getPhone(),
+                member.getDateOfBirth().toString(),
+                true
+                );
+    }
 
 }

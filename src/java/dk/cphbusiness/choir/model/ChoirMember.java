@@ -56,7 +56,7 @@ public class ChoirMember extends Person {
     @Size(max = 30)
     @Column(name = "PASSWORD")
     private String password;
-    @ManyToMany(mappedBy = "member1Collection")
+    @ManyToMany(mappedBy = "members")
     private Collection<ChoirRole> choirRoles;
     @JoinColumn(name = "CODE", referencedColumnName = "CODE")
     @ManyToOne

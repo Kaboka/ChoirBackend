@@ -17,8 +17,15 @@ import dk.cphbusiness.choir.contract.eto.NoSuchArtistException;
 import dk.cphbusiness.choir.contract.eto.NoSuchMaterialException;
 import dk.cphbusiness.choir.contract.eto.NoSuchMemberException;
 import dk.cphbusiness.choir.contract.eto.NoSuchMusicException;
+import dk.cphbusiness.choir.model.ChoirMember;
+import dk.cphbusiness.choir.model.ChoirRole;
+import dk.cphbusiness.choir.model.Voice;
+import java.util.ArrayList;
 import java.util.Collection;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -60,12 +67,25 @@ public class ChoirManagerBean implements ChoirManager{
 
     @Override
     public Collection<MemberSummary> listMembersByRole(String roleCode) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
+        ChoirRole role = em.find(ChoirRole.class, roleCode);
+        Collection<MemberSummary> members = new ArrayList<MemberSummary>();
+        for(ChoirMember member : role.getMembers()){
+            members.add(ChoirAssembler.createMemberSummary(member));
+        }
+        
+        return members;
     }
 
     @Override
     public Collection<MemberSummary> listMembersByVoices(int voiceCodes) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
+        Voice voice = em.find(Voice.class,voiceCodes);
+        Collection<MemberSummary> members = new ArrayList<MemberSummary>();
+        
+        return members;
     }
 
     @Override
