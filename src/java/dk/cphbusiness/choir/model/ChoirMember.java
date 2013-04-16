@@ -4,7 +4,6 @@
  */
 package dk.cphbusiness.choir.model;
 
-import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -17,7 +16,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -28,14 +26,14 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "MEMBER")
 @NamedQueries({
-    @NamedQuery(name = "Member1.findAll", query = "SELECT m FROM Member1 m"),
-    @NamedQuery(name = "Member1.findById", query = "SELECT m FROM Member1 m WHERE m.id = :id"),
-    @NamedQuery(name = "Member1.findByStreet", query = "SELECT m FROM Member1 m WHERE m.street = :street"),
-    @NamedQuery(name = "Member1.findByZipcode", query = "SELECT m FROM Member1 m WHERE m.zipcode = :zipcode"),
-    @NamedQuery(name = "Member1.findByCity", query = "SELECT m FROM Member1 m WHERE m.city = :city"),
-    @NamedQuery(name = "Member1.findByPhone", query = "SELECT m FROM Member1 m WHERE m.phone = :phone"),
-    @NamedQuery(name = "Member1.findByEmail", query = "SELECT m FROM Member1 m WHERE m.email = :email"),
-    @NamedQuery(name = "Member1.findByPassword", query = "SELECT m FROM Member1 m WHERE m.password = :password")})
+    @NamedQuery(name = "ChoirMember.findAll", query = "SELECT m FROM ChoirMember m"),
+    @NamedQuery(name = "ChoirMember.findById", query = "SELECT m FROM ChoirMember m WHERE m.id = :id"),
+    @NamedQuery(name = "ChoirMember.findByStreet", query = "SELECT m FROM ChoirMember m WHERE m.street = :street"),
+    @NamedQuery(name = "ChoirMember.findByZipcode", query = "SELECT m FROM ChoirMember m WHERE m.zipcode = :zipcode"),
+    @NamedQuery(name = "ChoirMember.findByCity", query = "SELECT m FROM ChoirMember m WHERE m.city = :city"),
+    @NamedQuery(name = "ChoirMember.findByPhone", query = "SELECT m FROM ChoirMember m WHERE m.phone = :phone"),
+    @NamedQuery(name = "ChoirMember.findByEmail", query = "SELECT m FROM ChoirMember m WHERE m.email = :email"),
+    @NamedQuery(name = "ChoirMember.findByPassword", query = "SELECT m FROM ChoirMember m WHERE m.password = :password")})
 public class ChoirMember extends Person {
     private static final long serialVersionUID = 1L;
     
@@ -59,7 +57,7 @@ public class ChoirMember extends Person {
     @Column(name = "PASSWORD")
     private String password;
     @ManyToMany(mappedBy = "member1Collection")
-    private Collection<ChoirRole> choirRoleCollection;
+    private Collection<ChoirRole> choirRoles;
     @JoinColumn(name = "CODE", referencedColumnName = "CODE")
     @ManyToOne
     private Voice code;
@@ -123,12 +121,12 @@ public class ChoirMember extends Person {
         this.password = password;
     }
 
-    public Collection<ChoirRole> getChoirRoleCollection() {
-        return choirRoleCollection;
+    public Collection<ChoirRole> getChoirRoles() {
+        return choirRoles;
     }
 
-    public void setChoirRoleCollection(Collection<ChoirRole> choirRoleCollection) {
-        this.choirRoleCollection = choirRoleCollection;
+    public void setChoirRoles(Collection<ChoirRole> choirRoles) {
+        this.choirRoles = choirRoles;
     }
 
     public Voice getCode() {
@@ -147,29 +145,10 @@ public class ChoirMember extends Person {
         this.person = person;
     }
 
-//    @Override
-//    public int hashCode() {
-//        int hash = 0;
-//        hash += (id != null ? id.hashCode() : 0);
-//        return hash;
-//    }
-//
-//    @Override
-//    public boolean equals(Object object) {
-//        // TODO: Warning - this method won't work in the case the id fields are not set
-//        if (!(object instanceof ChoirMember)) {
-//            return false;
-//        }
-//        ChoirMember other = (ChoirMember) object;
-//        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-//            return false;
-//        }
-//        return true;
-//    }
-//
-//    @Override
-//    public String toString() {
-//        return "dk.cphbusiness.choir.model.Member1[ id=" + id + " ]";
-//    }
+    
+    @Override
+    public String toString() {
+        return "dk.cphbusiness.choir.model.Member1[ id=" + getId() + " ]";
+    }
     
 }

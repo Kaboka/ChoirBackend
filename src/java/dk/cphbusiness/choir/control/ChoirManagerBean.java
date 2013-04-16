@@ -40,7 +40,7 @@ public class ChoirManagerBean implements ChoirManager{
 
     @Override
     public void changePassword(String oldPassword, String newPassword) throws AuthenticationException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     @Override
