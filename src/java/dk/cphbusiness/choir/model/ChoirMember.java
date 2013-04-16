@@ -61,9 +61,7 @@ public class ChoirMember extends Person {
     @JoinColumn(name = "CODE", referencedColumnName = "CODE")
     @ManyToOne
     private Voice code;
-    @JoinColumn(name = "ID", referencedColumnName = "ID", insertable = false, updatable = false)
-    @OneToOne(optional = false)
-    private Person person;
+
 
     public ChoirMember() {
     }
@@ -136,16 +134,7 @@ public class ChoirMember extends Person {
     public void setCode(Voice code) {
         this.code = code;
     }
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
-    }
-
-    
+   
     @Override
     public String toString() {
         return "dk.cphbusiness.choir.model.Member1[ id=" + getId() + " ]";
