@@ -16,6 +16,7 @@ create sequence CHOIR_SEQUENCE as int minvalue 1;
 
 create table PERSON(
     ID int primary key,
+    DTYPE varchar(20),
     FIRST_NAME varchar(30) not null,
     LAST_NAME varchar(30) not null,
     DATE_OF_BIRTH date
@@ -70,6 +71,7 @@ create table MUSIC(
 
 create table MATERIAL(
     ID int primary key,
+    DTYPE varchar(20),
     TITLE varchar(40),
     FILE varchar(50),
     FILE_SIZE int,
@@ -113,7 +115,7 @@ values
 ('REP','Repertoire');
 
 insert into PERSON
-Values(1,'Lars','Clausen',null);
+Values(1,'ChoirMember','Lars','Clausen','1957-02-15');
 
 insert into MEMBER
 values(1,'Ålegade 7','2300','København','53246291','Lars_Clausen@hotmail.com','12345',1);

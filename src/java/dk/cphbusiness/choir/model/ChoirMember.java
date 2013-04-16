@@ -26,7 +26,7 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "MEMBER")
-@DiscriminatorValue(value = "Member")
+@DiscriminatorValue(value = "ChoirMember")
 @NamedQueries({
     @NamedQuery(name = "ChoirMember.findAll", query = "SELECT m FROM ChoirMember m"),
     @NamedQuery(name = "ChoirMember.findById", query = "SELECT m FROM ChoirMember m WHERE m.id = :id"),

@@ -70,6 +70,7 @@ public class ChoirManagerBean implements ChoirManager{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
         EntityManager em = emf.createEntityManager();
         ChoirRole role = em.find(ChoirRole.class, roleCode);
+        System.out.println(role.getCode());
         Collection<MemberSummary> members = new ArrayList<MemberSummary>();
         for(ChoirMember member : role.getMembers()){
             members.add(ChoirAssembler.createMemberSummary(member));

@@ -10,6 +10,8 @@ import dk.cphbusiness.choir.contract.dto.RoleSummary;
 import dk.cphbusiness.choir.contract.dto.VoiceSummary;
 import dk.cphbusiness.choir.model.ChoirMember;
 import dk.cphbusiness.choir.model.ChoirRole;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -43,6 +45,7 @@ public class ChoirAssembler {
     }
     
     public static MemberSummary createMemberSummary(ChoirMember member){
+        Format formatter = new SimpleDateFormat("yyyy-MM-dd");
         return new MemberSummary(
                 (long)member.getId(),
                 member.getVoice().getName(),
@@ -51,7 +54,7 @@ public class ChoirAssembler {
                 member.getStreet() + ", " + member.getZipcode(),
                 member.getEmail(),
                 member.getPhone(),
-                member.getDateOfBirth().toString(),
+                formatter.format(member.getDateOfBirth()),
                 true
                 );
     }
