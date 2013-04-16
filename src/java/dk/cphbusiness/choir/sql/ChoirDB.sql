@@ -121,4 +121,3 @@ values(1,'Ålegade 7','2300','København','53246291','Lars_Clausen@hotmail.com',
 insert into HAS_ROLE
 values
 (1,'ADM');
-

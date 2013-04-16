@@ -8,8 +8,13 @@ import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -27,7 +32,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  * kasper
  */
 @Entity
+@Inheritance(strategy=InheritanceType.JOINED)
 @Table(name = "MATERIAL")
+@DiscriminatorColumn(name="DTYPE", discriminatorType=DiscriminatorType.STRING)
+@DiscriminatorValue(value = "Material")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Material.findAll", query = "SELECT m FROM Material m"),
@@ -36,7 +44,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Material.findByFile", query = "SELECT m FROM Material m WHERE m.file = :file"),
     @NamedQuery(name = "Material.findByFileSize", query = "SELECT m FROM Material m WHERE m.fileSize = :fileSize"),
     @NamedQuery(name = "Material.findByType", query = "SELECT m FROM Material m WHERE m.type = :type")})
-public class Material implements Serializable {
+public abstract class Material implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)

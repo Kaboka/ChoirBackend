@@ -7,6 +7,7 @@ package dk.cphbusiness.choir.model;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -23,6 +24,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "AUDIO")
+@DiscriminatorValue(value = "Audio")
 @NamedQueries({
     @NamedQuery(name = "Audio.findAll", query = "SELECT a FROM Audio a"),
     @NamedQuery(name = "Audio.findById", query = "SELECT a FROM Audio a WHERE a.id = :id"),
@@ -33,9 +35,7 @@ public class Audio extends Material {
     
     @Column(name = "PLAYING_TIME")
     private Integer playingTime;
-    @JoinColumn(name = "ID", referencedColumnName = "ID", insertable = false, updatable = false)
-    @OneToOne(optional = false)
-    private Material material;
+
 
     public Audio() {
     }
@@ -52,37 +52,9 @@ public class Audio extends Material {
         this.playingTime = playingTime;
     }
 
-    public Material getMaterial() {
-        return material;
+    @Override
+    public String toString() {
+        return "dk.cphbusiness.choir.model.Audio[ id=" + getId() + " ]";
     }
-
-    public void setMaterial(Material material) {
-        this.material = material;
-    }
-
-//    @Override
-//    public int hashCode() {
-//        int hash = 0;
-//        hash += (id != null ? id.hashCode() : 0);
-//        return hash;
-//    }
-//
-//    @Override
-//    public boolean equals(Object object) {
-//        // TODO: Warning - this method won't work in the case the id fields are not set
-//        if (!(object instanceof Audio)) {
-//            return false;
-//        }
-//        Audio other = (Audio) object;
-//        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-//            return false;
-//        }
-//        return true;
-//    }
-//
-//    @Override
-//    public String toString() {
-//        return "dk.cphbusiness.choir.model.Audio[ id=" + id + " ]";
-//    }
     
 }

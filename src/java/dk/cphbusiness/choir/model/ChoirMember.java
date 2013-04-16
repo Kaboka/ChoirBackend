@@ -7,6 +7,7 @@ package dk.cphbusiness.choir.model;
 import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -25,6 +26,7 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "MEMBER")
+@DiscriminatorValue(value = "Member")
 @NamedQueries({
     @NamedQuery(name = "ChoirMember.findAll", query = "SELECT m FROM ChoirMember m"),
     @NamedQuery(name = "ChoirMember.findById", query = "SELECT m FROM ChoirMember m WHERE m.id = :id"),
