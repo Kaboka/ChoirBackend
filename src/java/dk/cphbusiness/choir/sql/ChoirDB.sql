@@ -36,7 +36,7 @@ create table VOICE(
 create table MEMBER(
     ID int primary key references PERSON(ID),
     STREET varchar(40),
-    ZIPCODE int,
+    ZIPCODE varchar(4),
     CITY varchar(20),
     PHONE varchar(30),
     EMAIL varchar(40),

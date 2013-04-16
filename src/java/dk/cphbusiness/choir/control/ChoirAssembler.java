@@ -24,7 +24,7 @@ public class ChoirAssembler {
             roles.add(new RoleSummary(role.getCode(), role.getName()));
         }
         return new MemberDetail(
-                    member.getId(),
+                    (long)member.getId(),
                     member.getFirstName(),
                     member.getLastName(),
                     "",

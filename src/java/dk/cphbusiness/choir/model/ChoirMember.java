@@ -41,7 +41,7 @@ public class ChoirMember extends Person {
     @Column(name = "STREET")
     private String street;
     @Column(name = "ZIPCODE")
-    private Integer zipcode;
+    private String zipcode;
     @Size(max = 20)
     @Column(name = "CITY")
     private String city;
@@ -79,11 +79,11 @@ public class ChoirMember extends Person {
         this.street = street;
     }
 
-    public Integer getZipcode() {
+    public String getZipcode() {
         return zipcode;
     }
 
-    public void setZipcode(Integer zipcode) {
+    public void setZipcode(String zipcode) {
         this.zipcode = zipcode;
     }
 
