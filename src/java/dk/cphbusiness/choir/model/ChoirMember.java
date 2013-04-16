@@ -60,7 +60,7 @@ public class ChoirMember extends Person {
     private Collection<ChoirRole> choirRoles;
     @JoinColumn(name = "CODE", referencedColumnName = "CODE")
     @ManyToOne
-    private Voice code;
+    private Voice voice;
 
 
     public ChoirMember() {
@@ -127,12 +127,12 @@ public class ChoirMember extends Person {
         this.choirRoles = choirRoles;
     }
 
-    public Voice getCode() {
-        return code;
+    public Voice getVoice() {
+        return voice;
     }
 
-    public void setCode(Voice code) {
-        this.code = code;
+    public void setVoice(Voice voice) {
+        this.voice = voice;
     }
    
     @Override
