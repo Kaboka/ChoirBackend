@@ -9,8 +9,13 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
@@ -26,7 +31,10 @@ import javax.validation.constraints.Size;
  * kasper
  */
 @Entity
+@Inheritance(strategy=InheritanceType.JOINED)
 @Table(name = "PERSON")
+@DiscriminatorColumn(name="DTYPE", discriminatorType=DiscriminatorType.STRING)
+@DiscriminatorValue(value = "Person")
 @NamedQueries({
     @NamedQuery(name = "Person.findAll", query = "SELECT p FROM Person p"),
     @NamedQuery(name = "Person.findById", query = "SELECT p FROM Person p WHERE p.id = :id"),

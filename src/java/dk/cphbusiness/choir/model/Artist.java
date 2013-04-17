@@ -10,6 +10,7 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -30,6 +31,7 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "ARTIST")
+@DiscriminatorValue(value = "Artist")
 @NamedQueries({
     @NamedQuery(name = "Artist.findAll", query = "SELECT a FROM Artist a"),
     @NamedQuery(name = "Artist.findById", query = "SELECT a FROM Artist a WHERE a.id = :id"),
