@@ -96,7 +96,32 @@ public class ChoirManagerBean implements ChoirManager{
 
     @Override
     public MemberDetail saveMember(MemberAuthentication user, MemberDetail member) throws NoSuchMemberException, AuthenticationException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(user.isAdministrator()){
+            ChoirMember choirMember = new ChoirMember();
+            choirMember.setFirstName(member.getFirstName());
+            choirMember.setLastName(member.getLastName());
+            choirMember.setCity(member.getCity());
+            choirMember.setEmail(member.getEmail());
+            choirMember.setDateOfBirth(member.getDateOfBirth());
+            choirMember.setPhone(member.getPhone());
+            
+            //Adds roles for the Choir Member
+            for(RoleSummary role : member.getRoles()){
+                ChoirRole cRole = new ChoirRole(role.getCode());
+                cRole.setName(role.getName());  
+                choirMember.getChoirRoles().add(cRole);
+            }
+            
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+            EntityManager em = emf.createEntityManager();
+            
+            em.persist(choirMember);        //Overskriver den, hvis member'en allerede eksisterer? Altså, hvis vi nu gemmer en, vi har ændret i.
+        }
+        else{
+            throw new AuthenticationException("User does not have admin rights.");
+        }
+        
+        return member;
     }
 
     @Override
