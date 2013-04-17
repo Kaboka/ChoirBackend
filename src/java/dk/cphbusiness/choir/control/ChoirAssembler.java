@@ -10,6 +10,7 @@ import dk.cphbusiness.choir.contract.dto.RoleSummary;
 import dk.cphbusiness.choir.contract.dto.VoiceSummary;
 import dk.cphbusiness.choir.model.ChoirMember;
 import dk.cphbusiness.choir.model.ChoirRole;
+import dk.cphbusiness.choir.model.Voice;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -54,6 +55,16 @@ public class ChoirAssembler {
                 member.getDateOfBirth().toString(),
                 true
                 );
+    }
+    
+    public static VoiceSummary createVoiceSummary(Voice voice)
+    {
+        return new VoiceSummary(voice.getCode(), voice.getName());
+    }
+    
+    public static RoleSummary createRoleSummary(ChoirRole role)
+    {
+        return new RoleSummary(role.getCode(), role.getName());
     }
 
 }

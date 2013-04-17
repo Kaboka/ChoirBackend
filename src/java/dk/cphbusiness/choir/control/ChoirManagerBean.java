@@ -52,12 +52,26 @@ public class ChoirManagerBean implements ChoirManager{
 
     @Override
     public Collection<VoiceSummary> listVoices() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
+        Collection<VoiceSummary> voices = new ArrayList<VoiceSummary>();
+        for(Voice voice : (ArrayList<Voice>)em.createNamedQuery("Voice.findAll").getResultList())
+        {
+            voices.add(ChoirAssembler.createVoiceSummary(voice));
+        }
+        return voices;
     }
 
     @Override
     public Collection<RoleSummary> listRoles() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
+        Collection<RoleSummary> roles = new ArrayList<RoleSummary>();
+        for(ChoirRole role : (ArrayList<ChoirRole>)em.createNamedQuery("Role.findAll").getResultList())
+        {
+            roles.add(ChoirAssembler.createRoleSummary(role));
+        }
+        return roles;
     }
 
     @Override
