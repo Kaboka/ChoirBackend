@@ -110,7 +110,13 @@ public class ChoirManagerBean implements ChoirManager{
 
     @Override
     public MemberDetail saveMember(MemberAuthentication user, MemberDetail member) throws NoSuchMemberException, AuthenticationException {
-        if(user.isAdministrator()){
+        
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
+        
+        //Checks if user has permission to edit this member. Only allowed if user is admin or editing themselves.
+        if(user.getId() == member.getId() || user.isAdministrator()){
+            em.getTransaction().begin();
             ChoirMember choirMember = new ChoirMember();
             choirMember.setFirstName(member.getFirstName());
             choirMember.setLastName(member.getLastName());
@@ -118,6 +124,7 @@ public class ChoirManagerBean implements ChoirManager{
             choirMember.setEmail(member.getEmail());
             choirMember.setDateOfBirth(member.getDateOfBirth());
             choirMember.setPhone(member.getPhone());
+            choirMember.setId((int)member.getId());
             
             //Adds roles for the Choir Member
             for(RoleSummary role : member.getRoles()){
@@ -126,13 +133,18 @@ public class ChoirManagerBean implements ChoirManager{
                 choirMember.getChoirRoles().add(cRole);
             }
             
-            EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
-            EntityManager em = emf.createEntityManager();
+            ChoirMember dbMember = em.find(ChoirMember.class, member.getId());  //Selects the member in the DB which has the same ID as the MemberDetail object.
             
-            em.persist(choirMember);        //Overskriver den, hvis member'en allerede eksisterer? Altså, hvis vi nu gemmer en, vi har ændret i.
+            if(dbMember != null)
+                em.refresh(choirMember);            //Updates if member already exists in DB
+            else
+                em.persist(choirMember);            //Creates new member if it doesn't already exist in DB
+            
+            em.getTransaction().commit();
+            em.close();
         }
         else{
-            throw new AuthenticationException("User does not have admin rights.");
+            throw new AuthenticationException("User has insufficient rights.");
         }
         
         return member;
