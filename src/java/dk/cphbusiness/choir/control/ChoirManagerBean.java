@@ -26,6 +26,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 /**
  *
@@ -76,7 +77,14 @@ public class ChoirManagerBean implements ChoirManager{
 
     @Override
     public Collection<MemberSummary> listMembers() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
+        Collection<MemberSummary> members = new ArrayList<MemberSummary>();
+        for(ChoirMember member : (ArrayList<ChoirMember>)em.createNamedQuery("ChoirMember.findAll").getResultList())
+        {
+            members.add(ChoirAssembler.createMemberSummary(member));
+        }
+        return members;
     }
 
     @Override
@@ -107,7 +115,10 @@ public class ChoirManagerBean implements ChoirManager{
 
     @Override
     public MemberDetail findMember(long id) throws NoSuchMemberException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
+        MemberDetail member = ChoirAssembler.createMemberDetail(em.find(ChoirMember.class, id));
+        return member;  
     }
 
     @Override
