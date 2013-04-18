@@ -38,7 +38,23 @@ public class ChoirManagerBean implements ChoirManager{
 
     @Override
     public MemberAuthentication login(String email, String password) throws AuthenticationException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
+        ChoirMember member = null;
+        try{
+        member = (ChoirMember)em.createQuery("SELECT m FROM ChoirMember m WHERE m.email= :email AND m.password=:password")
+                                                             .setParameter("email", email)
+                                                             .setParameter("password", password)
+                                                             .getSingleResult();
+        }catch(Exception e){
+         throw new AuthenticationException("failed login");
+        }
+        MemberAuthentication authentication = new MemberAuthentication(member.getId(),member.getEmail() );
+        for(ChoirRole role : member.getChoirRoles()){
+            authentication.addRoleCode(role.getCode());
+        }
+        
+        return authentication;
     }
 
     @Override
