@@ -107,11 +107,11 @@ public class Artist implements Serializable {
         this.person = person;
     }
 
-    public Collection<Music> getMusicCollection() {
+    public Collection<Music> getMusic() {
         return musicCollection;
     }
 
-    public void setMusicCollection(Collection<Music> musicCollection) {
+    public void setMusic(Collection<Music> musicCollection) {
         this.musicCollection = musicCollection;
     }
 

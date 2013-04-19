@@ -116,11 +116,11 @@ public class Music implements Serializable {
         this.history = history;
     }
 
-    public Collection<Material> getMaterialCollection() {
+    public Collection<Material> getMaterials() {
         return materialCollection;
     }
 
-    public void setMaterialCollection(Collection<Material> materialCollection) {
+    public void setMaterials(Collection<Material> materialCollection) {
         this.materialCollection = materialCollection;
     }
 

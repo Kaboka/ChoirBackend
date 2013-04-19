@@ -17,8 +17,11 @@ import dk.cphbusiness.choir.contract.eto.NoSuchArtistException;
 import dk.cphbusiness.choir.contract.eto.NoSuchMaterialException;
 import dk.cphbusiness.choir.contract.eto.NoSuchMemberException;
 import dk.cphbusiness.choir.contract.eto.NoSuchMusicException;
+import dk.cphbusiness.choir.model.Artist;
 import dk.cphbusiness.choir.model.ChoirMember;
 import dk.cphbusiness.choir.model.ChoirRole;
+import dk.cphbusiness.choir.model.Material;
+import dk.cphbusiness.choir.model.Music;
 import dk.cphbusiness.choir.model.Voice;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,7 +29,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.Query;
 
 /**
  *
@@ -64,7 +66,10 @@ public class ChoirManagerBean implements ChoirManager{
 
     @Override
     public void changePassword(String oldPassword, String newPassword) throws AuthenticationException {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
         
+        //Which user is logged in? I have no MemberAuthentication in my parameters to know who's logged in.
     }
 
     @Override
@@ -164,13 +169,10 @@ public class ChoirManagerBean implements ChoirManager{
             
             if(choirMember.getId() == 0){
                 em.persist(choirMember);            //Creates new member if it doesn't already exist in DB
-                System.out.println("CREATED MEMBER WITH NAME: " + choirMember.getFirstName());
             }   
             else{
                 em.refresh(choirMember);            //Updates if member already exists in DB
-                System.out.println("UPDATED MEMBER WITH NAME: " + choirMember.getFirstName());
-            }
-                
+            }         
                  
             em.getTransaction().commit();
             em.close();
@@ -184,47 +186,142 @@ public class ChoirManagerBean implements ChoirManager{
 
     @Override
     public Collection<MaterialSummary> listMaterials() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
+        Collection<MaterialSummary> materials = new ArrayList<MaterialSummary>();
+        for(Material material : (ArrayList<Material>)em.createNamedQuery("Material.findAll").getResultList())
+        {
+            materials.add(ChoirAssembler.createMaterialSummary(material));
+        }
+        return materials;
     }
 
     @Override
     public Collection<MaterialSummary> listMaterialsByVoices(int voiceCodes) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
+        Collection<MaterialSummary> materials = new ArrayList<MaterialSummary>();
+        Voice voice = em.find(Voice.class,voiceCodes);
+        for(Material material : voice.getMaterials()){
+            materials.add(ChoirAssembler.createMaterialSummary(material));
+        }
+        
+        return materials;
     }
 
     @Override
     public Collection<MaterialSummary> listMaterialsByMusic(long musicId) throws NoSuchMusicException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
+        Collection<MaterialSummary> materials = new ArrayList<MaterialSummary>();
+        Music music = em.find(Music.class,musicId);
+        for(Material material : music.getMaterials()){
+            materials.add(ChoirAssembler.createMaterialSummary(material));
+        }
+        
+        return materials;
     }
 
     @Override
     public MaterialDetail findMaterial(long id) throws NoSuchMaterialException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
+        MaterialDetail material = ChoirAssembler.createMaterialDetail(em.find(Material.class, id));
+        
+        return material;
     }
 
     @Override
     public MaterialDetail saveMaterial(MemberAuthentication user, MaterialDetail material) throws NoSuchMaterialException, AuthenticationException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
+//        Material cMaterial = new Material(material.getId()); --> abstract, cannot use
+        
+        //TODO: use the type variable in MaterialDetail to determine wether it's a sheet or an audio file, so we can persist the Material Object.
+        
+//        em.getTransaction().begin();
+//        
+//        for(VoiceSummary voiceSummary : material.getVoices()){
+//                Voice voice = new Voice(voiceSummary.getCode());
+//                voice.setName(voiceSummary.getName());
+//                cMaterial.getVoices().add(voice);
+//        }
+//            
+//            if(cMaterial.getId() == 0){
+//                em.persist(cMaterial);            //Creates new material if it doesn't already exist in DB
+//            }   
+//            else{
+//                em.refresh(cMaterial);            //Updates if material already exists in DB
+//            }         
+//                 
+//            em.getTransaction().commit();
+//            em.close();
+        return material;
     }
 
     @Override
     public Collection<MusicSummary> listMusic() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
+        Collection<MusicSummary> musicList = new ArrayList<MusicSummary>();
+        for(Music music : (ArrayList<Music>)em.createNamedQuery("Music.findAll").getResultList()){
+            musicList.add(ChoirAssembler.createMusicSummary(music));
+        }
+        
+        return musicList;
     }
 
     @Override
     public Collection<MusicSummary> listMusicByComposer(long composerId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
+        Collection<MusicSummary> musicList = new ArrayList<MusicSummary>();
+        Artist composer = em.find(Artist.class,composerId);
+        for(Music music : composer.getMusic()){
+            musicList.add(ChoirAssembler.createMusicSummary(music));
+        }
+        
+        return musicList;
     }
 
     @Override
     public MusicDetail findMusic(long id) throws NoSuchMusicException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
+        MusicDetail music = ChoirAssembler.createMusicDetail(em.find(Music.class, id));
+        return music;
     }
 
     @Override
     public MusicDetail saveMusic(MemberAuthentication user, MusicDetail music) throws NoSuchMusicException, AuthenticationException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
+        
+            em.getTransaction().begin();
+            Music cMusic = new Music((int)music.getId());
+            
+            //Adds roles for the Choir Member
+            for(RoleSummary role : member.getRoles()){
+                ChoirRole cRole = new ChoirRole(role.getCode());
+                cRole.setName(role.getName());
+                choirMember.getChoirRoles().add(cRole);
+            }
+            
+            if(choirMember.getId() == 0){
+                em.persist(choirMember);            //Creates new member if it doesn't already exist in DB
+            }   
+            else{
+                em.refresh(choirMember);            //Updates if member already exists in DB
+            }         
+                 
+            em.getTransaction().commit();
+            em.close();
+        }
+        else{
+            throw new AuthenticationException("User has insufficient rights.");
+        }
+        
+        return member;
     }
 
     @Override

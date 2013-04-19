@@ -69,7 +69,7 @@ public abstract class Material implements Serializable {
     private Collection<Voice> voices;
     @JoinColumn(name = "MUSIC_ID", referencedColumnName = "ID") 
     @ManyToOne(optional = false)
-    private Music musicId;
+    private Music music;
 
     public Material() {
     }
@@ -121,15 +121,15 @@ public abstract class Material implements Serializable {
         return voices;
     }
 
-    public void setVoiceCollection(Collection<Voice> voices) {
+    public void setVoices(Collection<Voice> voices) {
         this.voices = voices;
     }
-    public Music getMusicId() {
-        return musicId;
+    public Music getMusic() {
+        return music;
     }
 
-    public void setMusicId(Music musicId) {
-        this.musicId = musicId;
+    public void setMusic(Music musicId) {
+        this.music = musicId;
     }
 
     @Override

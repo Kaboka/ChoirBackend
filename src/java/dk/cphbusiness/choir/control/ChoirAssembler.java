@@ -1,11 +1,19 @@
 package dk.cphbusiness.choir.control;
 
+import dk.cphbusiness.choir.contract.dto.ArtistSummary;
+import dk.cphbusiness.choir.contract.dto.MaterialDetail;
+import dk.cphbusiness.choir.contract.dto.MaterialSummary;
 import dk.cphbusiness.choir.contract.dto.MemberDetail;
 import dk.cphbusiness.choir.contract.dto.MemberSummary;
+import dk.cphbusiness.choir.contract.dto.MusicDetail;
+import dk.cphbusiness.choir.contract.dto.MusicSummary;
 import dk.cphbusiness.choir.contract.dto.RoleSummary;
 import dk.cphbusiness.choir.contract.dto.VoiceSummary;
+import dk.cphbusiness.choir.model.Artist;
 import dk.cphbusiness.choir.model.ChoirMember;
 import dk.cphbusiness.choir.model.ChoirRole;
+import dk.cphbusiness.choir.model.Material;
+import dk.cphbusiness.choir.model.Music;
 import dk.cphbusiness.choir.model.Voice;
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -41,6 +49,45 @@ public class ChoirAssembler {
                 );
     }
     
+    
+    //CONTAINS HARDCODED DUMMY VALUES
+    public static MaterialDetail createMaterialDetail(Material material){
+        Collection<VoiceSummary> voices = new ArrayList<VoiceSummary>();
+        Music music = material.getMusic();
+        MusicSummary musicSummary = new MusicSummary((long)music.getId(), music.getTitle(), music.getComposer().getPerson().getFirstName(), music.getOpus() + "", "");
+        for(Voice voice : material.getVoices()){
+            voices.add(new VoiceSummary(voice.getCode(), voice.getName()));
+        }
+
+        return new MaterialDetail((long)material.getId(), material.getTitle(), voices, musicSummary, material.getFile(), material.getFileSize(), 0, 0);
+    }
+    
+    //CONTAINS HARDCODED DUMMY VALUES
+    public static MusicDetail createMusicDetail(Music music){
+        Artist artist = music.getComposer();
+        Collection<MaterialSummary> materials = new ArrayList<MaterialSummary>();
+        
+        ArtistSummary composer = new ArtistSummary(
+                artist.getId(),
+                artist.getPerson().getFirstName()+" "+artist.getPerson().getLastName(),
+                artist.getWikiUrl());
+        
+        for(Material material : music.getMaterials()){
+            materials.add(new MaterialSummary(material.getId(), material.getTitle(), "", "material.getMusic().getDescription()", material.getType()));
+        }
+        
+        MusicDetail musicDetail = new MusicDetail(
+                (long)music.getId(),
+                music.getTitle(),
+                music.getOpus()+"",
+                composer,
+                materials,
+                music.getReleaseYear(),
+                music.getPlace(),
+                music.getHistory());
+        return musicDetail;
+    }
+    
     public static MemberSummary createMemberSummary(ChoirMember member){
         Format formatter = new SimpleDateFormat("yyyy-MM-dd");
         return new MemberSummary(
@@ -55,6 +102,21 @@ public class ChoirAssembler {
                 true
                 );
     }
+    
+    //CONTAINS HARDCODED DUMMY VALUES
+    public static MusicSummary createMusicSummary(Music music){
+        return new MusicSummary(music.getId(),
+                music.getTitle(),
+                music.getComposer().getPerson().getFirstName()+" "+music.getComposer().getPerson().getLastName(),
+                music.getOpus()+"", "");
+    }
+    
+    //CONTAINS HARDCODED DUMMY VALUES
+    public static MaterialSummary createMaterialSummary(Material material){
+        return new MaterialSummary(material.getId(), material.getTitle(), "", "", material.getType());
+    }
+    
+    
     
     public static VoiceSummary createVoiceSummary(Voice voice)
     {
