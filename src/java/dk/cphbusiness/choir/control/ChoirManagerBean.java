@@ -162,13 +162,11 @@ public class ChoirManagerBean implements ChoirManager{
                 choirMember.getChoirRoles().add(cRole);
             }
             
-            ChoirMember dbMember = em.find(ChoirMember.class, member.getId());  //Selects the member in the DB which has the same ID as the MemberDetail object.
-            
-            if(dbMember != null)
-                em.refresh(choirMember);            //Updates if member already exists in DB
-            else
+            if(choirMember.getId() == 0)
                 em.persist(choirMember);            //Creates new member if it doesn't already exist in DB
-            
+            else
+                em.refresh(choirMember);            //Updates if member already exists in DB
+                 
             em.getTransaction().commit();
             em.close();
         }
