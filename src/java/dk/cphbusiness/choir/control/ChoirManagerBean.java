@@ -158,7 +158,7 @@ public class ChoirManagerBean implements ChoirManager{
             //Adds roles for the Choir Member
             for(RoleSummary role : member.getRoles()){
                 ChoirRole cRole = new ChoirRole(role.getCode());
-                cRole.setName(role.getName());  
+                cRole.setName(role.getName());
                 choirMember.getChoirRoles().add(cRole);
             }
             
