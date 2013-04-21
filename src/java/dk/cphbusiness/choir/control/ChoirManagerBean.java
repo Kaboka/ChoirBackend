@@ -22,6 +22,7 @@ import dk.cphbusiness.choir.model.ChoirMember;
 import dk.cphbusiness.choir.model.ChoirRole;
 import dk.cphbusiness.choir.model.Material;
 import dk.cphbusiness.choir.model.Music;
+import dk.cphbusiness.choir.model.Person;
 import dk.cphbusiness.choir.model.Voice;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +30,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+
 
 /**
  *
@@ -322,29 +324,78 @@ public class ChoirManagerBean implements ChoirManager{
         }
         
         return member;
-    }
 
     @Override
     public Collection<ArtistSummary> listArtists() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
+        Collection<ArtistSummary> artistList = new ArrayList<ArtistSummary>();
+        for(Artist artist : (ArrayList<Artist>)em.createNamedQuery("Artist.findAll").getResultList()){
+            artistList.add(ChoirAssembler.createArtistSummary(artist));
+        }
+        
+        return artistList;
     }
 
     @Override
     public Collection<ArtistSummary> listArtistsByPattern(String pattern) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
+        Collection<ArtistSummary> artistList = new ArrayList<ArtistSummary>();
+        Artist artistPattern = em.find(Artist.class, pattern);
+        //for(Artist artist : artistPattern.getPattern){
+        //    artistList.add(ChoirAssembler.createArtistSummary(artist));
+        //}
+        
+        return artistList;
+  //HVAD DJÆVLEN ER ET PATTERN!?!?!?!?!?!?!?!?!?!?!?!??!?!?!?!?!?!?!?  
     }
 
     @Override
     public ArtistDetail findArtist(long id) throws NoSuchArtistException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
+        ArtistDetail artist = ChoirAssembler.createArtistDetail(em.find(Artist.class, id));
+        
+        return artist;
     }
 
     @Override
     public ArtistDetail saveArtist(MemberAuthentication user, ArtistDetail artist) throws NoSuchArtistException, AuthenticationException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
+        
+        
+        if(user.getId() == artist.getId() || user.isAdministrator()){
+            em.getTransaction().begin();
+    
+            
+            ArtistDetail saveArtist = new ArtistDetail();
+            
+            saveArtist.setFirstName(artist.getFirstName());
+            saveArtist.setLastName(artist.getLastName());
+            saveArtist.setWikiUrl(artist.getWikiUrl());
+            saveArtist.setCountry(artist.getCountry());
+            saveArtist.setDateOfBirth(artist.getDateOfBirth());
+            saveArtist.setDateOfDeath(artist.getDateOfDeath());
+            
+            if(artist.getId() == 0){
+                em.persist(saveArtist);            //Creates new member if it doesn't already exist in DB
+            }   
+            else{
+                em.refresh(saveArtist);            //Updates if member already exists in DB
+            }         
+                 
+            em.getTransaction().commit();
+            em.close();
+        }
+        else{
+            throw new AuthenticationException("User has insufficient rights.");
+        }
+        
+        return artist;
     }
-
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    }
+   
 
 }

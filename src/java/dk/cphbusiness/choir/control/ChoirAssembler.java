@@ -1,5 +1,6 @@
 package dk.cphbusiness.choir.control;
 
+import dk.cphbusiness.choir.contract.dto.ArtistDetail;
 import dk.cphbusiness.choir.contract.dto.ArtistSummary;
 import dk.cphbusiness.choir.contract.dto.MaterialDetail;
 import dk.cphbusiness.choir.contract.dto.MaterialSummary;
@@ -110,6 +111,17 @@ public class ChoirAssembler {
                 music.getComposer().getPerson().getFirstName()+" "+music.getComposer().getPerson().getLastName(),
                 music.getOpus()+"", "");
     }
+    
+    public static ArtistSummary createArtistSummary(Artist artist){
+        return new ArtistSummary(artist.getId(), artist.getPerson().getFirstName()+" "+artist.getPerson().getLastName(), 
+                artist.getWikiUrl());
+    }
+    
+    public static ArtistDetail createArtistDetail(Artist artist){
+        return new ArtistDetail(artist.getId(), artist.getPerson().getFirstName(), artist.getPerson().getLastName(), 
+                artist.getWikiUrl(), artist.getCountry(), artist.getPerson().getDateOfBirth(), artist.getDateOfDeath());
+    }
+    
     
     //CONTAINS HARDCODED DUMMY VALUES
     public static MaterialSummary createMaterialSummary(Material material){
