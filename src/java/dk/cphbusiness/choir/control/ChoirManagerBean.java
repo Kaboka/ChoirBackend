@@ -22,7 +22,6 @@ import dk.cphbusiness.choir.model.ChoirMember;
 import dk.cphbusiness.choir.model.ChoirRole;
 import dk.cphbusiness.choir.model.Material;
 import dk.cphbusiness.choir.model.Music;
-import dk.cphbusiness.choir.model.Person;
 import dk.cphbusiness.choir.model.Voice;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -299,31 +298,48 @@ public class ChoirManagerBean implements ChoirManager{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
         EntityManager em = emf.createEntityManager();
         
+        
+            
             em.getTransaction().begin();
-            Music cMusic = new Music((int)music.getId());
             
-            //Adds roles for the Choir Member
-            for(RoleSummary role : member.getRoles()){
-                ChoirRole cRole = new ChoirRole(role.getCode());
-                cRole.setName(role.getName());
-                choirMember.getChoirRoles().add(cRole);
-            }
             
-            if(choirMember.getId() == 0){
-                em.persist(choirMember);            //Creates new member if it doesn't already exist in DB
-            }   
-            else{
-                em.refresh(choirMember);            //Updates if member already exists in DB
-            }         
+            Artist artist = new Artist();
+            artist.setId((int)music.getComposer().getId());
+            artist.setWikiUrl(music.getComposer().getWikiUrl());
+//          artist.setCountry(music.getComposer().getCountry());                MISSING GETCOUNTRY METHOD
+//          artist.setDateOfDeath(music.getComposer().getDateOfDeath());        MISSING GETDATEOFDEATH METHOD
+//          artist.setMusic(music.getComposer().getMusic());                    MISSING GETMUSIC METHOD
+//          artist.setPerson(music.getComposer().getPerson());                  MISSING GETPERSON METHOD
+            
+            Collection<Material> materials = new ArrayList<Material>();
+            
+            
+            
+            Music cMusic = new Music();
+            cMusic.setId((int)music.getId());
+            cMusic.setTitle(music.getTitle());
+            cMusic.setHistory(music.getHistory());
+            cMusic.setComposer(artist);
+//            cMusic.setMaterials(music.getMaterials());
+//            
+//            for(RoleSummary role : member.getRoles()){
+//                ChoirRole cRole = new ChoirRole(role.getCode());
+//                cRole.setName(role.getName());
+//                choirMember.getChoirRoles().add(cRole);
+//            }
+//            
+//            if(choirMember.getId() == 0){
+//                em.persist(choirMember);            //Creates new member if it doesn't already exist in DB
+//            }   
+//            else{
+//                em.refresh(choirMember);            //Updates if member already exists in DB
+//            }         
                  
             em.getTransaction().commit();
             em.close();
-        }
-        else{
-            throw new AuthenticationException("User has insufficient rights.");
-        }
         
-        return member;
+        return music;
+    }
 
     @Override
     public Collection<ArtistSummary> listArtists() {
