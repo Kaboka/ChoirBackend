@@ -412,6 +412,3 @@ public class ChoirManagerBean implements ChoirManager{
         return artist;
     }
     }
-   
-
-}
