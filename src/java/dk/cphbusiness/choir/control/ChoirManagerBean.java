@@ -26,9 +26,11 @@ import dk.cphbusiness.choir.model.Voice;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.ejb.Stateless;
+import javax.management.relation.Role;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 
 /**
@@ -78,7 +80,8 @@ public class ChoirManagerBean implements ChoirManager{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
         EntityManager em = emf.createEntityManager();
         Collection<VoiceSummary> voices = new ArrayList<VoiceSummary>();
-        for(Voice voice : (ArrayList<Voice>)em.createNamedQuery("Voice.findAll").getResultList())
+        Collection<Voice> list = em.createNamedQuery("Voice.findAll").getResultList();
+        for(Voice voice : list)
         {
             voices.add(ChoirAssembler.createVoiceSummary(voice));
         }
@@ -90,7 +93,8 @@ public class ChoirManagerBean implements ChoirManager{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
         EntityManager em = emf.createEntityManager();
         Collection<RoleSummary> roles = new ArrayList<RoleSummary>();
-        for(ChoirRole role : (ArrayList<ChoirRole>)em.createNamedQuery("ChoirRole.findAll").getResultList())
+        Collection<ChoirRole> list = em.createNamedQuery("ChoirRole.findAll").getResultList();
+        for(ChoirRole role : list)
         {
             roles.add(ChoirAssembler.createRoleSummary(role));
         }
@@ -102,7 +106,8 @@ public class ChoirManagerBean implements ChoirManager{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
         EntityManager em = emf.createEntityManager();
         Collection<MemberSummary> members = new ArrayList<MemberSummary>();
-        for(ChoirMember member : (ArrayList<ChoirMember>)em.createNamedQuery("ChoirMember.findAll").getResultList())
+        Collection<ChoirMember> list = em.createNamedQuery("ChoirMember.findAll").getResultList();
+        for(ChoirMember member : list)
         {
             members.add(ChoirAssembler.createMemberSummary(member));
         }
@@ -150,7 +155,7 @@ public class ChoirManagerBean implements ChoirManager{
         EntityManager em = emf.createEntityManager();
         
         //Checks if user has permission to edit this member. Only allowed if user is admin or editing themselves.
-        if(user.getId() == member.getId() || user.isAdministrator()){
+        if(checkAdmin(user)){
             em.getTransaction().begin();
             ChoirMember choirMember = new ChoirMember();
             choirMember.setFirstName(member.getFirstName());
@@ -190,7 +195,8 @@ public class ChoirManagerBean implements ChoirManager{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
         EntityManager em = emf.createEntityManager();
         Collection<MaterialSummary> materials = new ArrayList<MaterialSummary>();
-        for(Material material : (ArrayList<Material>)em.createNamedQuery("Material.findAll").getResultList())
+        Collection<Material> list = em.createNamedQuery("Material.findAll").getResultList();
+        for(Material material : list)
         {
             materials.add(ChoirAssembler.createMaterialSummary(material));
         }
@@ -265,7 +271,9 @@ public class ChoirManagerBean implements ChoirManager{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
         EntityManager em = emf.createEntityManager();
         Collection<MusicSummary> musicList = new ArrayList<MusicSummary>();
-        for(Music music : (ArrayList<Music>)em.createNamedQuery("Music.findAll").getResultList()){
+        Collection<Music> list = em.createNamedQuery("Music.findAll").getResultList();
+        for(Music music : list)
+        {          
             musicList.add(ChoirAssembler.createMusicSummary(music));
         }
         
@@ -306,6 +314,7 @@ public class ChoirManagerBean implements ChoirManager{
             Artist artist = new Artist();
             artist.setId((int)music.getComposer().getId());
             artist.setWikiUrl(music.getComposer().getWikiUrl());
+            
 //          artist.setCountry(music.getComposer().getCountry());                MISSING GETCOUNTRY METHOD
 //          artist.setDateOfDeath(music.getComposer().getDateOfDeath());        MISSING GETDATEOFDEATH METHOD
 //          artist.setMusic(music.getComposer().getMusic());                    MISSING GETMUSIC METHOD
@@ -346,7 +355,9 @@ public class ChoirManagerBean implements ChoirManager{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
         EntityManager em = emf.createEntityManager();
         Collection<ArtistSummary> artistList = new ArrayList<ArtistSummary>();
-        for(Artist artist : (ArrayList<Artist>)em.createNamedQuery("Artist.findAll").getResultList()){
+        Collection<Artist> list = em.createNamedQuery("Artist.findAll").getResultList();
+        for(Artist artist : list)
+        {
             artistList.add(ChoirAssembler.createArtistSummary(artist));
         }
         
@@ -375,25 +386,39 @@ public class ChoirManagerBean implements ChoirManager{
         
         return artist;
     }
+    
+    private boolean checkAdmin(MemberAuthentication user){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
+        EntityManager em = emf.createEntityManager();
+        ChoirMember u = em.find(ChoirMember.class, user.getId());
+        boolean isAdmin = false;
+        for(ChoirRole r : u.getChoirRoles()){
+            if(r.getCode().equals("ADM")){
+                isAdmin = true;
+            }
+        }
+        return isAdmin;
+    }
 
     @Override
     public ArtistDetail saveArtist(MemberAuthentication user, ArtistDetail artist) throws NoSuchArtistException, AuthenticationException {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("ChoirBackendPU");
         EntityManager em = emf.createEntityManager();
         
-        
-        if(user.getId() == artist.getId() || user.isAdministrator()){
+        if(checkAdmin(user)){
             em.getTransaction().begin();
     
             
-            ArtistDetail saveArtist = new ArtistDetail();
+            Artist saveArtist = new Artist();
             
-            saveArtist.setFirstName(artist.getFirstName());
-            saveArtist.setLastName(artist.getLastName());
-            saveArtist.setWikiUrl(artist.getWikiUrl());
-            saveArtist.setCountry(artist.getCountry());
-            saveArtist.setDateOfBirth(artist.getDateOfBirth());
-            saveArtist.setDateOfDeath(artist.getDateOfDeath());
+//            saveArtist.setFirstName(artist.getFirstName());
+//            saveArtist.setLastName(artist.getLastName());
+//            saveArtist.setWikiUrl(artist.getWikiUrl());
+//            saveArtist.setCountry(artist.getCountry());
+//            saveArtist.setDateOfBirth(artist.getDateOfBirth());
+//            saveArtist.setDateOfDeath(artist.getDateOfDeath());
+            
+            
             
             if(artist.getId() == 0){
                 em.persist(saveArtist);            //Creates new member if it doesn't already exist in DB
